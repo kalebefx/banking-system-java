@@ -4,7 +4,7 @@ public class ContaService {
     private ArrayList<Movimentacao> movimentacoes = new ArrayList<>();
     private double totalSacadoHoje;
 
-    
+
     public void sacar(double valor, ContaCliente conta) {
         if (valor > conta.getSaldo()) {
             System.out.println("Saldo insuficiente!!");
@@ -20,15 +20,23 @@ public class ContaService {
         totalSacadoHoje += valor;
     }
 
+
     public void depositar(double valor, ContaCliente conta) {
         double novoSaldo = conta.getSaldo() + valor;
         conta.setSaldo(novoSaldo);
         movimentacoes.add(new Movimentacao("DEPOSITO", valor));
     }
+
+
     public void puxarExtrato(){
         for (Movimentacao m : movimentacoes) {
             System.out.println(m);
         }
     }
 
+
+    public void transferir(double valor, ContaCliente origem, ContaCliente destino){
+        sacar(valor,origem);
+        depositar(valor,destino);
+    }
 }
