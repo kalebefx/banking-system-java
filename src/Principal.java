@@ -7,69 +7,82 @@ public class Principal {
     public static void main(String[] args){
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Digite seu nome completo:  ");
-        String nome = input.next();
-        System.out.println("Digite seu CPF: ");
-        String cpf = input.next();
-        System.out.println("Digite seu Saldo: ");
-        double saldo = input.nextDouble();
+            System.out.println("Digite seu nome completo:  ");
+            String nome = input.nextLine();
 
-        ContaCliente conta = new ContaCliente(nome, cpf, saldo);
-        System.out.println(conta);
+            if (!nome.matches("[a-zA-ZÀ-ú\\s]+")) {
+                System.out.println("Erro: não pode ter numeros.");
+                return;
+            }
 
-        ContaService acao = new ContaService();
+            System.out.println("Digite seu CPF: ");
+            String cpf = input.next();
+            if (!cpf.matches("\\d{11}")){
+                System.out.println("Erro: CPF so poder ter numeros");
+                return;
+            }
 
-        System.out.println("Seja Bem vindo " + nome);
-        boolean rodando = true;
-        while (rodando){
-            int escolha;
-            System.out.println("--------------------------");
-            System.out.println("""
+            System.out.println("Digite seu Saldo: ");
+            String saldoStr = input.next();
+            if (!saldoStr.matches("\\d+(\\.\\d{1,2})?")) {
+                System.out.println("Formato de saldo inválido! Use apenas números (ex: 1500.50)");
+                return;
+            }
+
+            double saldo = Double.parseDouble(saldoStr);
+
+
+            input.nextLine();
+
+
+            ContaCliente conta = new ContaCliente(nome, cpf, saldo);
+            ContaService acao = new ContaService();
+
+            System.out.println("\nSeja Bem-vindo, " + nome + "!");
+            boolean rodando = true;
+
+            while (rodando){
+                int escolha;
+                System.out.println("--------------------------");
+                System.out.println("""
                     1 : DEPOSITAR
                     2 : SAQUE
                     3 : EXTRATO
                     4 : SAIR
                     """);
-            System.out.println("--------------------------");
-            System.out.println("ESCOLHA UMA OPÇÃO");
-            escolha = input.nextInt();
-            double saldoAtual;
-            while (escolha < 1 || escolha > 4) {
-                System.out.println("Opção inválida! Digite de 1 a 4: ");
+                System.out.println("--------------------------");
+                System.out.println("ESCOLHA UMA OPÇÃO");
+
                 escolha = input.nextInt();
-            }
-            switch (escolha) {
-                case 1:
+
+                while (escolha < 1 || escolha > 4) {
+                    System.out.println("Opção inválida! Digite de 1 a 4: ");
+                    escolha = input.nextInt();
+                }
+
+                switch (escolha) {
+                    case 1:
                         System.out.println("Digite o valor que você quer depositar: ");
                         double b = input.nextDouble();
-                         saldo = acao.depositar(b, saldo);
-                        System.out.println("Valor " + b + "retidado de seu saque. "+ "Saldo atual: " + saldo );
-                    break;
-                case 2:
+                         acao.depositar(b, conta);
+                        System.out.println("Depósito de R$ " + b + " realizado! Saldo atual: " + conta.getSaldo());
+                        break;
+                    case 2:
                         System.out.println("Digite o valor que você quer sacar: ");
                         double a = input.nextDouble();
-                        saldo = acao.sacar(a, saldo);
-                        System.out.println("Depósito de R$ " + a + " realizado! Saldo atual: " + saldo);
-                    break;
-                case 3:
-                    System.out.println("---SEU EXTRATO---");
-                    acao.puxarExtrato();
-                    break;
-                case 4:
-                    rodando = false;
-                    break;
+                        acao.sacar(a, conta);
+                        System.out.println("Valor R$ " + a + " retirado. Saldo atual: " + conta.getSaldo());                        break;
+                    case 3:
+                        System.out.println("---SEU EXTRATO---");
+                        acao.puxarExtrato();
+                        break;
+                    case 4:
+                        rodando = false;
+                        break;
+                }
             }
-
-
-
-
-        }
-
-
-
-
-
-
-
+        input.close();
     }
 }
+
+

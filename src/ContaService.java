@@ -3,18 +3,20 @@ import java.util.ArrayList;
 public class ContaService {
     private ArrayList<Movimentacao> movimentacoes = new ArrayList<>();
 
-    public double sacar(double valor,  double saldo){
-        if(valor > saldo ){
+    public void sacar(double valor, ContaCliente conta) {
+        if (valor > conta.getSaldo()) {
             System.out.println("Saldo insuficiente!!");
-            return saldo;
+            return;
         }
+        double novoSaldo = conta.getSaldo() - valor;
+        conta.setSaldo(novoSaldo);
         movimentacoes.add(new Movimentacao("SAQUE", valor));
-        return saldo - valor;
     }
 
-    public double depositar(double valor, double saldo){
-        movimentacoes.add(new Movimentacao("DEPOSITO",valor));
-        return saldo + valor;
+    public void depositar(double valor, ContaCliente conta) {
+        double novoSaldo = conta.getSaldo() + valor;
+        conta.setSaldo(novoSaldo);
+        movimentacoes.add(new Movimentacao("DEPOSITO", valor));
     }
     public void puxarExtrato(){
         for (Movimentacao m : movimentacoes) {
