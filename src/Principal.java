@@ -4,7 +4,7 @@ import java.util.InputMismatchException;
 
 public class Principal {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         Scanner input = new Scanner(System.in);
         System.out.println("CADASTRE SUA PRIMEIRA CONTA");
         System.out.println("Digite seu nome completo:  ");
@@ -58,6 +58,7 @@ public class Principal {
         input.nextLine();
         ContaCliente conta02 = new ContaCliente(nome2,cpf2,saldo2);
         ContaService acao = new ContaService();
+        CotacaoService cotService = new CotacaoService();
 
         System.out.println("\nSeja Bem-vindo, " + nome + "!");
         boolean rodando = true;
@@ -71,15 +72,16 @@ public class Principal {
                     3 : TRANSFERÊNCIA
                     4 : EXTRATO
                     5 : EXIBIR DADOS
-                    6 : SAIR
+                    6 : COTAÇÃO DO DÓLAR
+                    7 : SAIR
                     """);
             System.out.println("--------------------------");
             System.out.println("ESCOLHA UMA OPÇÃO");
 
             escolha = input.nextInt();
 
-            while (escolha < 1 || escolha > 6) {
-                System.out.println("Opção inválida! Digite de 1 a 6: ");
+            while (escolha < 1 || escolha > 7) {
+                System.out.println("Opção inválida! Digite de 1 a 7: ");
                 escolha = input.nextInt();
             }
 
@@ -99,8 +101,10 @@ public class Principal {
                     try {
                         System.out.println("Digite o valor que você quer sacar: ");
                         double a = input.nextDouble();
-                        acao.sacar(a, conta);
-                        System.out.println("Valor R$ " + a + " retirado. Saldo atual: " + conta.getSaldo());
+                        boolean sacou = acao.sacar(a, conta);
+                        if (sacou) {
+                            System.out.println("Valor R$ " + a + " retirado. Saldo atual: " + conta.getSaldo());
+                        }
                     } catch (InputMismatchException ss){
                         System.out.println("Erro: Entrada inválida. Por favor, use números (e vírgula para decimais).");
                         input.nextLine();
@@ -120,6 +124,9 @@ public class Principal {
                     conta02.exibirDados();
                     break;
                 case 6:
+                    cotService.buscarCotacao();
+                    break;
+                case 7:
                     System.out.println("Encerrando programa...");
                     rodando = false;
                     break;

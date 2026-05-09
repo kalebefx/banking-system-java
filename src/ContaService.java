@@ -5,19 +5,20 @@ public class ContaService {
     private double totalSacadoHoje;
 
 
-    public void sacar(double valor, ContaCliente conta) {
+    public boolean sacar(double valor, ContaCliente conta) {
         if (valor > conta.getSaldo()) {
             System.out.println("Saldo insuficiente!!");
-            return;
+            return false;
         }
         if(this.totalSacadoHoje + valor > 1000){
             System.out.println("Limite diario atingido!");
-            return;
+            return false;
         }
         double novoSaldo = conta.getSaldo() - valor;
         conta.setSaldo(novoSaldo);
         movimentacoes.add(new Movimentacao("SAQUE", valor));
         totalSacadoHoje += valor;
+        return true;
     }
 
 
